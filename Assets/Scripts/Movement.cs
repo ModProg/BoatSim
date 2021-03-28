@@ -8,9 +8,8 @@ public class Movement : MonoBehaviour
     public Transform throttleLever;
     public Transform steeringWheel;
 
-    public Collider boatCollider;
 
-    public LayerMask resetOnHit;
+    public LayerMask dontHitLayers;
 
     public float mass;
     public float propellerThrust;
@@ -27,6 +26,8 @@ public class Movement : MonoBehaviour
     public float yawVelocity;
 
     public Transform world;
+
+
 
     private void Start()
     {
@@ -54,6 +55,25 @@ public class Movement : MonoBehaviour
         world.position -= velocity * Time.fixedDeltaTime;
 
         world.RotateAround(transform.position, Vector2.down, yawVelocity * Time.fixedDeltaTime);
-        Debug.Log(-yawVelocity * Time.fixedDeltaTime);
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if ((dontHitLayers.value & (2 << (other.gameObject.layer - 1))) != 0)
+        {
+            Reset();
+        }
+    }
+
+    public void Reset()
+    {
+        world.transform.position = Vector3.zero;
+        world.rotation = Quaternion.identity;
+        throttleLever.localEulerAngles = Vector3.zero;
+        steeringWheel.localEulerAngles = Vector3.zero;
+
+        velocity = Vector3.zero;
+        yawVelocity = 0;
     }
 }
