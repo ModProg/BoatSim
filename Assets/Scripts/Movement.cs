@@ -8,6 +8,10 @@ public class Movement : MonoBehaviour
     public Transform throttleLever;
     public Transform steeringWheel;
 
+    public Collider boatCollider;
+
+    public LayerMask resetOnHit;
+
     public float mass;
     public float propellerThrust;
 
