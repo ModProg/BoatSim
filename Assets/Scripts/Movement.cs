@@ -27,7 +27,8 @@ public class Movement : MonoBehaviour
 
     public Transform world;
 
-
+    public const float MAXTHROTTLE = 50;
+    public const float MAXSTEERING = 120;
 
     private void Start()
     {
