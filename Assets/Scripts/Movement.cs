@@ -8,22 +8,124 @@ public class Movement : MonoBehaviour
     public Transform throttleLever;
     public Transform steeringWheel;
 
-
     public LayerMask dontHitLayers;
 
-    public float mass;
-    public float propellerThrust;
+    [Tooltip("drag force coefificient")]
+    public float b_s;
 
-    public float forwardResistance;
+    [Tooltip("ship mass")]
+    public float M;
 
-    public float rudderKoeffizient;
+    // resistance(dragforce)
+    public Vector3 R_s
+    {
+        get { return b_s * M * v_s.sqrMagnitude * v_s.normalized; }
+    }
 
-    public float yawResistance;
+    [Tooltip("thrust coefficient of propeller")]
+    public float K_T;
 
-    public float inertiaFactor;
 
-    public Vector3 velocity;
-    public float yawVelocity;
+    [Tooltip("number of Propellers")]
+    public int n_p;
+
+[Tooltip("propeller revolution")]
+    public float max_f_p;
+
+    //[Tooltip("propeller revolution speed")]
+    public float f_p
+    {
+        get { return (throttleLever.localEulerAngles.x > 180 ? throttleLever.localEulerAngles.x - 360 : throttleLever.localEulerAngles.x) * max_f_p; }
+    }
+
+    [Tooltip("propeller diameter")]
+    public float D;
+
+    // Propeller Force
+    public Vector3 T
+    {
+        get { return K_T * f_p * f_p * D * D * D * D * n_p * transform.localToWorldMatrix.MultiplyVector(Vector3.forward); }
+    }
+
+    // acceleration
+    public Vector3 a_s
+    {
+        get { return (T - R_s) / M; }
+    }
+
+    // rudder force
+    public float F_rd
+    {
+        get { return K_rd * A_rd * v_w * v_w * Theta_rd; }
+    }
+
+    // water velocity
+    public float v_w
+    {
+        get { return v_s.magnitude; }
+    }
+
+    [Tooltip("rudder coefficient")]
+    public float K_rd;
+    [Tooltip("rudder area")]
+    public float A_rd;
+
+    public float Theta_rd
+    {
+        get { return (steeringWheel.localEulerAngles.z > 180 ? steeringWheel.localEulerAngles.z - 360 : steeringWheel.localEulerAngles.z) * 35 / 120; }
+    }
+
+    // yaw net force
+    public float F_y
+    {
+        get { return F_rd - b_y * I_y * omega_y; }
+    }
+
+    [Tooltip("resistance coefficient for yaw")]
+    public float b_y;
+
+    [Tooltip("length of the ship")]
+    public float L;
+
+    // inertia moment of yaw
+    public float I_y
+    {
+        get { return M * L * L / 12; }
+    }
+
+    // angular acceleration for yaw
+    public float a_y
+    {
+        get { return F_y / I_y; }
+    }
+
+    // force of current
+    public Vector3 F_c
+    {
+        get { return Vector3.zero * K_c; }
+    }
+
+    // coefficient of current
+    public float K_c;
+
+    public Vector3 F_sw
+    {
+        get { return F_c - (b_sw * M * v_sw.magnitude * v_sw.magnitude) * v_sw.normalized; }
+    }
+
+    [Tooltip("resistance coefficient of sway")]
+    public float b_sw;
+
+    public Vector3 a_sw
+    {
+        get { return F_sw / M; }
+    }
+
+    [Tooltip("velocity of sway")]
+    public Vector3 v_sw;
+
+    public Vector3 v_s;
+    public float omega_y;
 
     public Transform world;
 
@@ -37,25 +139,16 @@ public class Movement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // -50 to 50
-        var throttle = (throttleLever.localEulerAngles.x > 180 ? throttleLever.localEulerAngles.x - 360 : throttleLever.localEulerAngles.x) * transform.localToWorldMatrix.MultiplyVector(Vector3.forward);
-        // -120 to 120 Neg is left, Pos is right
-        var steering = (steeringWheel.localEulerAngles.z > 180 ? steeringWheel.localEulerAngles.z - 360 : steeringWheel.localEulerAngles.z) * 35 / 120;
+        v_s += a_s * Time.fixedDeltaTime;
+        Debug.LogError(Theta_rd);
 
-        var a = (propellerThrust * throttle - forwardResistance * velocity) / mass;
+        omega_y += a_y * Time.fixedDeltaTime;
 
-        velocity = a * Time.fixedDeltaTime + velocity;
+        v_sw += a_sw * Time.deltaTime;
 
-        var I = inertiaFactor * mass;
+        world.position -= v_s * Time.fixedDeltaTime + v_sw * Time.deltaTime;
 
-        var ay = (rudderKoeffizient * velocity.magnitude * steering - yawResistance * yawVelocity) / I;
-
-        yawVelocity = ay * Time.fixedDeltaTime;
-
-
-        world.position -= velocity * Time.fixedDeltaTime;
-
-        world.RotateAround(transform.position, Vector2.down, yawVelocity * Time.fixedDeltaTime);
+        world.RotateAround(transform.position, Vector2.down, omega_y * Time.fixedDeltaTime);
     }
 
 
@@ -74,7 +167,7 @@ public class Movement : MonoBehaviour
         throttleLever.localEulerAngles = Vector3.zero;
         steeringWheel.localEulerAngles = Vector3.zero;
 
-        velocity = Vector3.zero;
-        yawVelocity = 0;
+        v_s = Vector3.zero;
+        omega_y = 0;
     }
 }
