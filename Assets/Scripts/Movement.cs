@@ -29,7 +29,7 @@ public class Movement : MonoBehaviour
     [Tooltip("number of Propellers")]
     public int n_p;
 
-[Tooltip("propeller revolution")]
+    [Tooltip("propeller revolution")]
     public float max_f_p;
 
     //[Tooltip("propeller revolution speed")]
