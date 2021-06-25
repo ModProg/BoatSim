@@ -28,6 +28,11 @@ public class KeyboardInput : MonoBehaviour
         float v = Input.GetAxis("Vertical");
         throttleLever.Rotate(new Vector3(v * d * ThrottleSpeed, 0, 0));
 
+        if (Input.GetButtonDown("Reset"))
+        {
+            throttleLever.localEulerAngles = Vector3.zero;
+            steeringWheel.localEulerAngles = Vector3.zero;
+        }
 
         // -50 to 50
         var throttle = (throttleLever.localEulerAngles.x > 180 ? throttleLever.localEulerAngles.x - 360 : throttleLever.localEulerAngles.x);

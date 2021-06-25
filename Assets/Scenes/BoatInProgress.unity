@@ -2162,25 +2162,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 28744416681060664, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 4076224460044988033, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1120316564084365520, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1607957871011599605, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115942948506003273, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
+    - target: {fileID: 4558561740895766520, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
       propertyPath: m_TargetEye
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3790198681362910696, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
-      propertyPath: m_Color.a
-      value: 0.5019608
       objectReference: {fileID: 0}
     - target: {fileID: 6024345731869396585, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
       propertyPath: m_Name
@@ -2234,17 +2222,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6034187829361662906, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
-      propertyPath: m_TargetEye
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6034187829361662906, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
-      propertyPath: m_AllowDynamicResolution
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6396767029829383098, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 6574832219279287178, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
+      propertyPath: m_TagString
+      value: MainCamera
       objectReference: {fileID: 0}
     - target: {fileID: 8810949043510815552, guid: da55811049a58d247a72f9f65f8f4103, type: 3}
       propertyPath: m_LocalPosition.x

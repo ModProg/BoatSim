@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    public Texture2D texture;
+
+    public Transform waterWindZone;
 
     public Transform throttleLever;
     public Transform steeringWheel;
@@ -44,7 +47,7 @@ public class Movement : MonoBehaviour
     // Propeller Force
     public Vector3 T
     {
-        get { return K_T * f_p * f_p * D * D * D * D * n_p * transform.localToWorldMatrix.MultiplyVector(Vector3.forward); }
+        get { return Mathf.Sign(f_p) * (K_T * f_p * f_p * D * D * D * D * n_p * transform.localToWorldMatrix.MultiplyVector(Vector3.forward)); }
     }
 
     // acceleration
@@ -72,7 +75,7 @@ public class Movement : MonoBehaviour
 
     public float Theta_rd
     {
-        get { return (steeringWheel.localEulerAngles.z > 180 ? steeringWheel.localEulerAngles.z - 360 : steeringWheel.localEulerAngles.z) * 35 / 120; }
+        get { return Mathf.Deg2Rad * (steeringWheel.localEulerAngles.z > 180 ? steeringWheel.localEulerAngles.z - 360 : steeringWheel.localEulerAngles.z) * 35 / 120; }
     }
 
     // yaw net force
@@ -102,7 +105,23 @@ public class Movement : MonoBehaviour
     // force of current
     public Vector3 F_c
     {
-        get { return Vector3.zero * K_c; }
+        get { return v_c* K_c; }
+    }
+
+    public Vector3 v_c
+    {
+        get
+        {
+            RaycastHit hit;
+            Physics.Raycast(transform.position, Vector3.down, out hit, 50, LayerMask.GetMask("Water"));
+            var pixuv = hit.textureCoord;
+            pixuv.x *= texture.width;
+            pixuv.y *= texture.height;
+            var pixel = texture.GetPixel((int)pixuv.x, (int)pixuv.y);
+            var x = pixel.r * 2f - 1f;
+            var y = pixel.g * 2f - 1f;
+            return new Vector3(y, 0, x);
+        }
     }
 
     // coefficient of current
@@ -140,7 +159,7 @@ public class Movement : MonoBehaviour
     private void FixedUpdate()
     {
         v_s += a_s * Time.fixedDeltaTime;
-        Debug.LogError(Theta_rd);
+        Debug.LogError(F_c);
 
         omega_y += a_y * Time.fixedDeltaTime;
 
@@ -149,6 +168,11 @@ public class Movement : MonoBehaviour
         world.position -= v_s * Time.fixedDeltaTime + v_sw * Time.deltaTime;
 
         world.RotateAround(transform.position, Vector2.down, omega_y * Time.fixedDeltaTime);
+
+        var dir = v_c;
+        if (dir.magnitude > 0){
+            waterWindZone.LookAt(waterWindZone.position + dir);
+        }
     }
 
 

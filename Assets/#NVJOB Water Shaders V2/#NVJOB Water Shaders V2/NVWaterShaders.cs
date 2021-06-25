@@ -21,7 +21,7 @@ public class NVWaterShaders : MonoBehaviour
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+    public Texture2D WaterFlow;
     public Vector2 rotateSpeed = new Vector2(0.4f, 0.4f);
     public Vector2 rotateDistance = new Vector2(2.0f, 2.0f);
     public bool depthTextureModeOn = true;
