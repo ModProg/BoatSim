@@ -16,7 +16,8 @@ Shader "Unlit/AR (Mask)"
         {
             Tags { "QUEUE"="Transparent" "IGNOREPROJECTOR"="true" "RenderType"="Transparent" }
             ZWrite Off
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend SrcAlpha One
+            BlendOp Add
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
