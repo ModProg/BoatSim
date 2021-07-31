@@ -4,26 +4,46 @@ using UnityEngine;
 
 public class BoatTest : MonoBehaviour
 {
-    //UengBoat boat;
-    //NaiveBoat boat;
-    states_variables sv;
-    // public float rot;
-    // public float surge;
-    // Start is called before the first frame update
-    void Start()
+    public float mass;
+    public float propellerThrust;
+
+    public float forwardResistance;
+
+    public float rudderKoeffizient;
+
+    public float yawResistance;
+
+    public float inertiaFactor;
+
+    public Vector3 velocity;
+    public float yawVelocity;
+
+    private void Start()
     {
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        // boat.rot_power=rot;
-        // boat.power=surge;
-        var n = 10 * Input.GetAxis("Vertical");
-        var delta = 35 * Input.GetAxis("Horizontal");
-        sv = BenedictBoat.Simulate(n, delta, sv);
-        transform.position = new Vector3(sv.Track_coordinate_x, 0, sv.Track_coordinate_y);
 
-        transform.eulerAngles = new Vector3(0, -sv.heading, 0);
+    private void FixedUpdate()
+    {
+        // -50 to 50
+        var throttle = Input.GetAxis("Vertical") * 50 * transform.localToWorldMatrix.MultiplyVector(Vector3.forward);
+        // -120 to 120 Neg is left, Pos is right
+        var steering = -Input.GetAxis("Horizontal") * 35;
+
+        var a = (propellerThrust * throttle - forwardResistance * velocity) / mass;
+
+        velocity = a * Time.fixedDeltaTime + velocity;
+
+        var I = inertiaFactor * mass;
+
+        var ay = (rudderKoeffizient * velocity.magnitude * steering - yawResistance * yawVelocity) / I;
+
+        yawVelocity = ay * Time.fixedDeltaTime;
+
+
+        transform.position += velocity * Time.fixedDeltaTime;
+
+        transform.RotateAround(transform.position, Vector2.down, yawVelocity * Time.fixedDeltaTime);
+        Debug.Log(-yawVelocity * Time.fixedDeltaTime);
     }
 }

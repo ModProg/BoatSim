@@ -152,6 +152,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6eb705227624144da4bbedcc84bd854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mass: 100
+  propellerThrust: 50
+  forwardResistance: 100
+  rudderKoeffizient: 2000
+  yawResistance: 10
+  inertiaFactor: 10
+  velocity: {x: 0, y: 0, z: 0}
+  yawVelocity: 0
 --- !u!4 &358485792
 Transform:
   m_ObjectHideFlags: 0
