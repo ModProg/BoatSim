@@ -262,3 +262,57 @@ public static class BenedictBoat
 //     }
 
 // }
+
+public abstract class BoatModel
+{
+    public struct Movement
+    {
+        public Vector3 delta_pos;
+        public Vector3 delta_rot;
+    }
+    public abstract Movement Update(float dt, float throttle_m1_to_1, float steering_m1_to_1);
+}
+public class SimpleBoat : BoatModel
+{
+    public float mass = 100;
+    public float propellerThrust = 50;
+
+    public float forwardResistance = 100;
+
+    public float rudderKoeffizient = 2000;
+
+    public float yawResistance = 10;
+
+    public float inertiaFactor = 10;
+
+    public float speed = 50;
+    public float rudderAngle = 35;
+
+    public Vector3 velocity;
+    public Vector3 forward = Vector3.forward;
+    public float yawVelocity;
+
+    override public Movement Update(float dt, float throttle_m1_to_1, float steering_m1_to_1)
+    {
+        // -50 to 50
+        var throttle = throttle_m1_to_1 * speed * forward;
+        // -120 to 120 Neg is left, Pos is right
+        var steering = steering_m1_to_1 * rudderAngle;
+
+        var a = (propellerThrust * throttle - forwardResistance * velocity) / mass;
+
+        velocity = a * Time.fixedDeltaTime + velocity;
+
+        var I = inertiaFactor * mass;
+
+        var ay = (rudderKoeffizient * velocity.magnitude * steering - yawResistance * yawVelocity) / I;
+
+        yawVelocity = ay * Time.fixedDeltaTime;
+
+        var mov = new Movement();
+        mov.delta_pos = velocity * Time.fixedDeltaTime;
+        mov.delta_rot = new Vector3(0, yawVelocity * Time.fixedDeltaTime, 0);
+        forward = Quaternion.Euler(0, mov.delta_rot.y, 0) * forward;
+        return mov;
+    }
+}
