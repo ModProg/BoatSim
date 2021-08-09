@@ -36,31 +36,13 @@ public class Movement : MonoBehaviour
     public float max_f_p;
 
     //[Tooltip("propeller revolution speed")]
-    public float f_p
+    public float throttle
     {
-        get { return (throttleLever.localEulerAngles.x > 180 ? throttleLever.localEulerAngles.x - 360 : throttleLever.localEulerAngles.x) * max_f_p; }
+        get { return (throttleLever.localEulerAngles.x > 180 ? throttleLever.localEulerAngles.x - 360 : throttleLever.localEulerAngles.x) / -MAXTHROTTLE; }
     }
 
     [Tooltip("propeller diameter")]
     public float D;
-
-    // Propeller Force
-    public Vector3 T
-    {
-        get { return Mathf.Sign(f_p) * (K_T * f_p * f_p * D * D * D * D * n_p * transform.localToWorldMatrix.MultiplyVector(Vector3.forward)); }
-    }
-
-    // acceleration
-    public Vector3 a_s
-    {
-        get { return (T - R_s) / M; }
-    }
-
-    // rudder force
-    public float F_rd
-    {
-        get { return K_rd * A_rd * v_w * v_w * Theta_rd; }
-    }
 
     // water velocity
     public float v_w
@@ -73,15 +55,9 @@ public class Movement : MonoBehaviour
     [Tooltip("rudder area")]
     public float A_rd;
 
-    public float Theta_rd
+    public float steering
     {
-        get { return Mathf.Deg2Rad * (steeringWheel.localEulerAngles.z > 180 ? steeringWheel.localEulerAngles.z - 360 : steeringWheel.localEulerAngles.z) * 35 / 120; }
-    }
-
-    // yaw net force
-    public float F_y
-    {
-        get { return F_rd - b_y * I_y * omega_y; }
+        get { return (steeringWheel.localEulerAngles.z > 180 ? steeringWheel.localEulerAngles.z - 360 : steeringWheel.localEulerAngles.z) / MAXSTEERING; }
     }
 
     [Tooltip("resistance coefficient for yaw")]
@@ -95,17 +71,10 @@ public class Movement : MonoBehaviour
     {
         get { return M * L * L / 12; }
     }
-
-    // angular acceleration for yaw
-    public float a_y
-    {
-        get { return F_y / I_y; }
-    }
-
     // force of current
     public Vector3 F_c
     {
-        get { return v_c* K_c; }
+        get { return v_c * K_c; }
     }
 
     public Vector3 v_c
@@ -151,26 +120,28 @@ public class Movement : MonoBehaviour
     public const float MAXTHROTTLE = 50;
     public const float MAXSTEERING = 120;
 
+    BoatModel boat;
     private void Start()
     {
+        boat = new SimpleBoat();
     }
 
 
     private void FixedUpdate()
     {
-        v_s += a_s * Time.fixedDeltaTime;
-        Debug.LogError(F_c);
 
-        omega_y += a_y * Time.fixedDeltaTime;
+        var mov = boat.Update(Time.fixedDeltaTime, throttle, steering);
+        Debug.Log(throttle);
+        Debug.Log(steering);
+        world.position -= mov.delta_pos;
 
-        v_sw += a_sw * Time.deltaTime;
-
-        world.position -= v_s * Time.fixedDeltaTime + v_sw * Time.deltaTime;
-
-        world.RotateAround(transform.position, Vector2.down, omega_y * Time.fixedDeltaTime);
+        world.RotateAround(transform.position, Vector3.down, mov.delta_rot.y);
+        world.RotateAround(transform.position, Vector3.back, mov.delta_rot.z);
+        world.RotateAround(transform.position, Vector3.left, mov.delta_rot.x);
 
         var dir = v_c;
-        if (dir.magnitude > 0){
+        if (dir.magnitude > 0)
+        {
             waterWindZone.LookAt(waterWindZone.position + dir);
         }
     }

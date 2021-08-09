@@ -295,7 +295,7 @@ public class SimpleBoat : BoatModel
     override public Movement Update(float dt, float throttle_m1_to_1, float steering_m1_to_1)
     {
         // -50 to 50
-        var throttle = throttle_m1_to_1 * speed * forward;
+        var throttle = throttle_m1_to_1 * speed * Vector3.forward;
         // -120 to 120 Neg is left, Pos is right
         var steering = steering_m1_to_1 * rudderAngle;
 
