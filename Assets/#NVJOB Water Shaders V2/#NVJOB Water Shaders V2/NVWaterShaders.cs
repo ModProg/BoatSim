@@ -244,7 +244,7 @@ public class NVWaterShaders : MonoBehaviour
         dest.farClipPlane = clipPlaneOffset.z;
         dest.nearClipPlane = clipPlaneOffset.y;
         dest.orthographic = src.orthographic;
-        dest.fieldOfView = src.fieldOfView;
+//        dest.fieldOfView = src.fieldOfView;
         dest.aspect = src.aspect;
         dest.orthographicSize = src.orthographicSize;
         dest.renderingPath = src.renderingPath;

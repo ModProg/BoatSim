@@ -9,7 +9,7 @@ public class Paths : MonoBehaviour
     private float current;
     public Transform ships;
 
-    public Boat[] boats;
+    public PathFollow[] pathFollows;
     private MeshFilter[] paths;
     // Start is called before the first frame update
     void Start()
@@ -25,7 +25,7 @@ public class Paths : MonoBehaviour
         if (current >= delay)
         {
             current -= delay;
-            var boat = boats[Random.Range(0, boats.Length)];
+            var boat = pathFollows[Random.Range(0, pathFollows.Length)];
             var path = paths[Random.Range(0, paths.Length)];
 
             var instance = Instantiate(boat, transform.TransformVector(path.mesh.vertices[0]) + transform.position, transform.rotation * boat.transform.rotation, ships);

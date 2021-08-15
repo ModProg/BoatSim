@@ -131,8 +131,8 @@ public class Movement : MonoBehaviour
     {
 
         var mov = boat.Update(Time.fixedDeltaTime, throttle, steering);
-        Debug.Log(throttle);
-        Debug.Log(steering);
+//        Debug.Log(throttle);
+//        Debug.Log(steering);
         world.position -= mov.delta_pos;
 
         world.RotateAround(transform.position, Vector3.down, mov.delta_rot.y);
