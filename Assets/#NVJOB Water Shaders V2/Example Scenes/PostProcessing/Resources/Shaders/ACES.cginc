@@ -727,7 +727,7 @@ static const half CINEMA_BLACK = CINEMA_WHITE / 2400.0;
 static const half ODT_SAT_FACTOR = 0.93;
 
 // <ACEStransformID>ODT.Academy.RGBmonitor_100nits_dim.a1.0.3</ACEStransformID>
-// <ACESuserName>ACES 1.0 Output - sRGB</ACESuserName>
+// <ACESuser_id>ACES 1.0 Output - sRGB</ACESuser_id>
 
 //
 // Output Device Transform - RGB computer monitor
@@ -825,7 +825,7 @@ half3 ODT_RGBmonitor_100nits_dim(half3 oces)
 }
 
 // <ACEStransformID>ODT.Academy.RGBmonitor_D60sim_100nits_dim.a1.0.3</ACEStransformID>
-// <ACESuserName>ACES 1.0 Output - sRGB (D60 sim.)</ACESuserName>
+// <ACESuser_id>ACES 1.0 Output - sRGB (D60 sim.)</ACESuser_id>
 
 //
 // Output Device Transform - RGB computer monitor (D60 simulation)
@@ -938,7 +938,7 @@ half3 ODT_RGBmonitor_D60sim_100nits_dim(half3 oces)
 }
 
 // <ACEStransformID>ODT.Academy.Rec709_100nits_dim.a1.0.3</ACEStransformID>
-// <ACESuserName>ACES 1.0 Output - Rec.709</ACESuserName>
+// <ACESuser_id>ACES 1.0 Output - Rec.709</ACESuser_id>
 
 //
 // Output Device Transform - Rec709
@@ -1030,7 +1030,7 @@ half3 ODT_Rec709_100nits_dim(half3 oces)
 }
 
 // <ACEStransformID>ODT.Academy.Rec709_D60sim_100nits_dim.a1.0.3</ACEStransformID>
-// <ACESuserName>ACES 1.0 Output - Rec.709 (D60 sim.)</ACESuserName>
+// <ACESuser_id>ACES 1.0 Output - Rec.709 (D60 sim.)</ACESuser_id>
 
 //
 // Output Device Transform - Rec709 (D60 simulation)
@@ -1138,7 +1138,7 @@ half3 ODT_Rec709_D60sim_100nits_dim(half3 oces)
 }
 
 // <ACEStransformID>ODT.Academy.Rec2020_100nits_dim.a1.0.3</ACEStransformID>
-// <ACESuserName>ACES 1.0 Output - Rec.2020</ACESuserName>
+// <ACESuser_id>ACES 1.0 Output - Rec.2020</ACESuser_id>
 
 //
 // Output Device Transform - Rec2020
@@ -1232,7 +1232,7 @@ half3 ODT_Rec2020_100nits_dim(half3 oces)
 }
 
 // <ACEStransformID>ODT.Academy.P3DCI_48nits.a1.0.3</ACEStransformID>
-// <ACESuserName>ACES 1.0 Output - P3-DCI</ACESuserName>
+// <ACESuser_id>ACES 1.0 Output - P3-DCI</ACESuser_id>
 
 //
 // Output Device Transform - P3DCI (D60 Simulation)

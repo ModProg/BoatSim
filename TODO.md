@@ -1,0 +1,5 @@
+- [ ] Add Text Renderer
+  - [ ] Padding
+  - [ ] Mask
+- [ ] Add script to create duplicate Objects and apply shader
+- [ ] Rework ship physics (idk why I am doing this to myself)
