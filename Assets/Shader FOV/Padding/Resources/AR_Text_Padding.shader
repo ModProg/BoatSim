@@ -96,7 +96,7 @@ Shader "AR/Padding/Text" {
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
-			#include "../TMPro_Properties.cginc"
+			#include "../../TMPro_Properties.cginc"
 
 			// Change for padding
             fixed4 _Padding;
