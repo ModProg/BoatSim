@@ -1,4 +1,4 @@
-Shader "Unlit/AR (Padding)"
+Shader "AR/Padding/Textured"
 {
     Properties
     {

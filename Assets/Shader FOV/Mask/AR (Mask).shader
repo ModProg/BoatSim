@@ -1,4 +1,4 @@
-Shader "Unlit/AR (Mask)"
+Shader "AR/Mask/Textured"
 {
     Properties
     {
