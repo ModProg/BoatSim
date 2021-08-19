@@ -1,10 +1,13 @@
 - [x] Add Text Renderer
   - [x] Padding
   - [x] Mask
-- [ ] Add script to create duplicate Objects and apply shader
+- [x] Add script to create duplicate Objects and apply shader
   - [x] Mesh
-  - [ ] Text
+  - [x] Text
   - [x] Global Control
 - [ ] Rework ship physics (idk why I am doing this to myself)
 - [ ] Improve Shaders
   - [ ] Mirror Mask & Padding
+- [ ] Re-Implement Effects 
+  - [ ] FPS-Restrictor
+  - [x] Slow Tracking

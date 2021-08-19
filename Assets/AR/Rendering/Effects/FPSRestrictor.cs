@@ -1,25 +1,22 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Camera))]
-public class FPSRestrictor : MonoBehaviour
-{
+public class FPSRestrictor : MonoBehaviour {
     public float fps = 20;
     float elapsed;
-    Camera cam;
+    Camera[] cams;
 
-    void Start()
-    {
-        cam = GetComponent<Camera>();
-        cam.enabled = false;
+    void Start() {
+        cams = GetComponentsInChildren<Camera>();
+        foreach (var cam in cams)
+                cam.enabled = false;
     }
 
-    void Update()
-    {
+    void Update() {
         elapsed += Time.deltaTime;
-        if (elapsed > 1 / fps)
-        {
+        if (elapsed > 1 / fps) {
             elapsed = 0;
-            cam.Render();
+            foreach (var cam in cams)
+                cam.Render();
         }
     }
 }
