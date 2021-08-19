@@ -5,9 +5,11 @@
   - [x] Mesh
   - [x] Text
   - [x] Global Control
+  - [x] Global Control Without Parent
 - [ ] Rework ship physics (idk why I am doing this to myself)
 - [ ] Improve Shaders
   - [ ] Mirror Mask & Padding
 - [ ] Re-Implement Effects 
-  - [ ] FPS-Restrictor
+  - [ ] FPS-Restrictor (Not easily possible without using RenderTextures)
   - [x] Slow Tracking
+- [ ] Added HowTo for `AR`

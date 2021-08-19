@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Reflection;
+using System.Runtime;
+using System.Runtime.InteropServices;
 using NaughtyAttributes;
 using TMPro;
 using UnityEngine;
@@ -32,11 +34,13 @@ public struct Masks {
 }
 
 public enum FovRestrictionObject {
-    Global,
+    Global = 0,
+    GlobalWithoutParent = 3,
     // These need to match ARSettings.FovRestriction
     Padding = 1,
     Mask = 2,
 }
+[DisallowMultipleComponent]
 public class ARObject : MonoBehaviour {
 
     static Shader PADDING;
@@ -44,13 +48,18 @@ public class ARObject : MonoBehaviour {
     static Shader PADDING_TEXT;
     static Shader MASK_TEXT;
 
+    [Label("Restriction Type")]
     public FovRestrictionObject restriction_type;
     private GameObject left, right;
 
     [ShowIf("restriction_type", FovRestrictionObject.Padding)]
+    [Label("Shown Area")]
     public ShownArea shown_area = ShownArea.Full();
     [ShowIf("restriction_type", FovRestrictionObject.Mask)]
     public Masks masks;
+    [ShowIf("restriction_type", FovRestrictionObject.GlobalWithoutParent)]
+    [Label("AR Settings")]
+    public ARSettings global_settings;
 
     // Start is called before the first frame update
     void Start() {
@@ -74,15 +83,24 @@ public class ARObject : MonoBehaviour {
             Destroy(this.right);
 
         FovRestriction restriction_type;
-        if (this.restriction_type == FovRestrictionObject.Global) {
-            Assert.IsNotNull(global_settings, "ARObjects with using `Global` restrictions may only RegenerateChildren through ARSettings.RegenerateChildren");
-            masks = global_settings.masks;
-            shown_area = global_settings.shown_area;
-            restriction_type = global_settings.restriction_type;
-        } else {
-            var masks = this.masks;
-            var shown_area = this.shown_area;
-            restriction_type = (FovRestriction)this.restriction_type;
+        Masks masks;
+        ShownArea shown_area;
+        switch (this.restriction_type) {
+            case FovRestrictionObject.GlobalWithoutParent:
+                Assert.IsNotNull(this.global_settings, "ARObjects with using `GlobalWithoutParent` restrictions need the property `AR Settings` (global_settings) to be set to an Object of Type `ARSettings`");
+                global_settings = this.global_settings;
+                goto case FovRestrictionObject.Global;
+            case FovRestrictionObject.Global:
+                Assert.IsNotNull(global_settings, "ARObjects with using `Global` restrictions may only RegenerateChildren through ARSettings.RegenerateChildren");
+                masks = global_settings.masks;
+                shown_area = global_settings.shown_area;
+                restriction_type = global_settings.restriction_type;
+                break;
+            default:
+                masks = this.masks;
+                shown_area = this.shown_area;
+                restriction_type = (FovRestriction)this.restriction_type;
+                break;
         }
 
         if (!masks.left)

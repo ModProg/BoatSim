@@ -10,6 +10,7 @@ public enum FovRestriction {
     Mask = 2,
 }
 
+[DisallowMultipleComponent]
 public class ARSettings : MonoBehaviour {
 
     public FovRestriction restriction_type;

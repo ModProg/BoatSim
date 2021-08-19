@@ -7,13 +7,7 @@ public class DelayedTrack : MonoBehaviour
     public Transform tracked;
     public float delay;
     public float progress;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
         progress += Time.deltaTime;
