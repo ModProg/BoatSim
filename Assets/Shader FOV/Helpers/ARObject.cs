@@ -39,6 +39,7 @@ public class ARObject : MonoBehaviour {
     static Shader MASK;
 
     public FovRestriction restriction_type;
+    private GameObject left, right;
 
     [ShowIf("restriction_type", FovRestriction.Padding)]
     public ShownArea shown_area = ShownArea.Full();
@@ -52,13 +53,27 @@ public class ARObject : MonoBehaviour {
         if (!MASK)
             MASK = Resources.Load<Shader>("AR_Mask");
 
+        RegenerateChildren();
+    }
+
+    // Update is called once per frame
+    void Update() {
+
+    }
+
+    void RegenerateChildren() {
+        if (this.left)
+            Destroy(this.left);
+        if (this.right)
+            Destroy(this.right);
+
         if (!masks.left)
             masks.left = Texture2D.whiteTexture;
         if (!masks.right)
             masks.right = Texture2D.whiteTexture;
 
-        var left = new GameObject("Left (" + name + ")");
-        var right = new GameObject("Right (" + name + ")");
+        this.left = new GameObject("Left (" + name + ")");
+        this.right = new GameObject("Right (" + name + ")");
 
         var parent_mesh_renderer = GetComponent<MeshRenderer>();
         var parent_mesh_filter = GetComponent<MeshFilter>();
@@ -110,10 +125,5 @@ public class ARObject : MonoBehaviour {
             var right_mesh_renderer = right.GetComponent<MeshRenderer>();
             right_mesh_renderer.material = right_material;
         }
-    }
-
-    // Update is called once per frame
-    void Update() {
-
     }
 }
