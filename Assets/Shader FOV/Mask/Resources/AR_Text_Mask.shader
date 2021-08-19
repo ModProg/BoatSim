@@ -94,7 +94,7 @@ Shader "AR/Mask/Text" {
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
-			#include "../TMPro_Properties.cginc"
+			#include "../../TMPro_Properties.cginc"
 
 			sampler2D _Mask;
 

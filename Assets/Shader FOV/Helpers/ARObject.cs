@@ -2,6 +2,7 @@ using System.Collections;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Rendering;
 
 public enum FovRestriction {
     Padding,
@@ -48,10 +49,12 @@ public class ARObject : MonoBehaviour {
     void Start() {
         if (!PADDING)
             PADDING = Resources.Load<Shader>("AR_Padding");
+        if (!MASK)
+            MASK = Resources.Load<Shader>("AR_Mask");
 
-        if (masks.left == null)
+        if (!masks.left)
             masks.left = Texture2D.whiteTexture;
-        if (masks.right == null)
+        if (!masks.right)
             masks.right = Texture2D.whiteTexture;
 
         var left = new GameObject("Left (" + name + ")");
@@ -73,24 +76,36 @@ public class ARObject : MonoBehaviour {
 
             if (parent_mesh_renderer) {
                 var cc = child.AddComponent<MeshRenderer>();
+                cc.shadowCastingMode = ShadowCastingMode.Off;
+                cc.receiveShadows = false;
             }
         }
 
         if (parent_mesh_renderer) {
+            // Select correct shader
+            Shader shader;
+            if (restriction_type == FovRestriction.Mask) {
+                shader = MASK;
+            } else {
+                shader = PADDING;
+            }
+
             parent_mesh_renderer.enabled = false;
             var parent_material = parent_mesh_renderer.material;
             // Left
-            var left_material = new Material(PADDING);
+            var left_material = new Material(shader);
             left_material.CopyPropertiesFromMaterial(parent_material);
             left_material.SetVector("_Padding", new Vector4(shown_area.horizontal.x, shown_area.horizontal.y, shown_area.vertical.x, shown_area.vertical.y));
+            left_material.SetTexture("_Mask", masks.left);
 
             var left_mesh_renderer = left.GetComponent<MeshRenderer>();
             left_mesh_renderer.material = left_material;
 
             // Right
-            var right_material = new Material(PADDING);
+            var right_material = new Material(shader);
             right_material.CopyPropertiesFromMaterial(parent_material);
             right_material.SetVector("_Padding", new Vector4(1 - shown_area.horizontal.y, 1 - shown_area.horizontal.x, shown_area.vertical.x, shown_area.vertical.y));
+            right_material.SetTexture("_Mask", masks.right);
 
             var right_mesh_renderer = right.GetComponent<MeshRenderer>();
             right_mesh_renderer.material = right_material;
