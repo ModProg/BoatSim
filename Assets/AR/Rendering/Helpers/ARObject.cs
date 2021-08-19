@@ -198,7 +198,7 @@ public class ARObject : MonoBehaviour {
             var text = child.GetComponent<TextMeshPro>();
             var fields = typeof(TextMeshPro).GetProperties();
             foreach (var field in fields) {
-                if (field.CanRead && field.CanWrite)
+                if (field.CanRead && field.CanWrite && !field.Name.ToLower().Contains("material"))
                     field.SetValue(text, field.GetValue(parent_text));
             }
         }
