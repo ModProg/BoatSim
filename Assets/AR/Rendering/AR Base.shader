@@ -1,4 +1,4 @@
-Shader "AR/Padding/Textured"
+Shader "AR/Textured"
 {
     Properties
     {

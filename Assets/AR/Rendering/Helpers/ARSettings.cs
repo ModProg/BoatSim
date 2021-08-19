@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 
+public enum FovRestriction {
+    // These need to match FovRestrictionObject
+    Padding = 1,
+    Mask = 2,
+}
+
 public class ARSettings : MonoBehaviour {
-    public enum FovRestriction {
-        // These need to match ARObject.FovRestriction
-        Padding = 1,
-        Mask = 2,
-    }
 
     public FovRestriction restriction_type;
 

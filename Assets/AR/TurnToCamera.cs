@@ -13,6 +13,8 @@ public class TurnToCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(this.transform);
+        Debug.Log(Camera.main.transform.position);
         this.transform.LookAt(Camera.main.transform.position);
         this.transform.Rotate(Vector3.up, 180);
     }
