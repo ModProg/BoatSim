@@ -4,6 +4,7 @@
 - [ ] Add script to create duplicate Objects and apply shader
   - [x] Mesh
   - [ ] Text
-  - [ ] Global Control
-  - [ ] Mirror Mask
+  - [x] Global Control
 - [ ] Rework ship physics (idk why I am doing this to myself)
+- [ ] Improve Shaders
+  - [ ] Mirror Mask & Padding

@@ -4,16 +4,11 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Rendering;
 
-public enum FovRestriction {
-    Padding,
-    Mask,
-    Global
-}
 
 [System.Serializable]
 public struct ShownArea {
     [MinMaxSlider(0.0f, 1.0f)]
-    [Label("Horizontal (Left Eye, Right is mirrored)")]
+    [Label("Horizontal (this.left Eye, this.right is mirrored)")]
     public Vector2 horizontal;
     [MinMaxSlider(0.0f, 1.0f)]
     public Vector2 vertical;
@@ -35,6 +30,13 @@ public struct Masks {
 }
 
 public class ARObject : MonoBehaviour {
+    public enum FovRestriction {
+        Global,
+        // These need to match ARSettings.FovRestriction
+        Padding = 1,
+        Mask = 2,
+    }
+
     static Shader PADDING;
     static Shader MASK;
 
@@ -52,33 +54,39 @@ public class ARObject : MonoBehaviour {
             PADDING = Resources.Load<Shader>("AR_Padding");
         if (!MASK)
             MASK = Resources.Load<Shader>("AR_Mask");
-
-        RegenerateChildren();
+        if (this.restriction_type != FovRestriction.Global)
+            RegenerateChildren();
     }
 
-    // Update is called once per frame
-    void Update() {
-
-    }
-
-    void RegenerateChildren() {
+    public void RegenerateChildren(ARSettings global_settings = null) {
         if (this.left)
             Destroy(this.left);
         if (this.right)
             Destroy(this.right);
+
+        var masks = this.masks;
+        var shown_area = this.shown_area;
+        var restriction_type = this.restriction_type;
+
+        if (restriction_type == FovRestriction.Global) {
+            Assert.IsNotNull(global_settings, "ARObjects with using `Global` restrictions may only RegenerateChildren through ARSettings.RegenerateChildren");
+            masks = global_settings.masks;
+            shown_area = global_settings.shown_area;
+            restriction_type = (FovRestriction)global_settings.restriction_type;
+        }
 
         if (!masks.left)
             masks.left = Texture2D.whiteTexture;
         if (!masks.right)
             masks.right = Texture2D.whiteTexture;
 
-        this.left = new GameObject("Left (" + name + ")");
-        this.right = new GameObject("Right (" + name + ")");
+        this.left = new GameObject("this.left (" + name + ")");
+        this.right = new GameObject("this.right (" + name + ")");
 
         var parent_mesh_renderer = GetComponent<MeshRenderer>();
         var parent_mesh_filter = GetComponent<MeshFilter>();
 
-        foreach (var child in new[] { left, right }) {
+        foreach (var child in new[] { this.left, this.right }) {
             child.transform.parent = transform;
             child.transform.localPosition = Vector3.zero;
             child.transform.localRotation = Quaternion.identity;
@@ -107,22 +115,22 @@ public class ARObject : MonoBehaviour {
 
             parent_mesh_renderer.enabled = false;
             var parent_material = parent_mesh_renderer.material;
-            // Left
+            // this.left
             var left_material = new Material(shader);
             left_material.CopyPropertiesFromMaterial(parent_material);
             left_material.SetVector("_Padding", new Vector4(shown_area.horizontal.x, shown_area.horizontal.y, shown_area.vertical.x, shown_area.vertical.y));
             left_material.SetTexture("_Mask", masks.left);
 
-            var left_mesh_renderer = left.GetComponent<MeshRenderer>();
+            var left_mesh_renderer = this.left.GetComponent<MeshRenderer>();
             left_mesh_renderer.material = left_material;
 
-            // Right
+            // this.right
             var right_material = new Material(shader);
             right_material.CopyPropertiesFromMaterial(parent_material);
             right_material.SetVector("_Padding", new Vector4(1 - shown_area.horizontal.y, 1 - shown_area.horizontal.x, shown_area.vertical.x, shown_area.vertical.y));
             right_material.SetTexture("_Mask", masks.right);
 
-            var right_mesh_renderer = right.GetComponent<MeshRenderer>();
+            var right_mesh_renderer = this.right.GetComponent<MeshRenderer>();
             right_mesh_renderer.material = right_material;
         }
     }
